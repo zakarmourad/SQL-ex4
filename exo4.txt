@@ -1,0 +1,145 @@
+-- zakar/karkaih
+
+//quest 1
+Declare 
+a number(2) ;
+b  number(2);
+c  number(2) ;
+begin
+a:=1;
+b:=2;
+dbms_output.put_line(a||b);
+c:=a;
+a:=b;
+b:=c;
+dbms_output.put_line(a||b);
+end ;/
+
+//quest 2
+
+Declare 
+a number(2):=3 ;
+f number(10):=1 ;
+begin
+FOR i IN  1..a 
+LOOP  
+f:= f+(i*f);
+END LOOP;  
+DBMS_OUTPUT.PUT_LINE (f);  
+end ;/
+
+//quest 3
+
+declare 
+
+CURSOR dept_cursor IS SELECT	DEPARTMENT_ID , DEPARTMENT_NAME , MANAGER_ID , LOCATION_ID  from DEPARTMENTS
+where DEPARTMENT_ID = (select max(DEPARTMENT_ID) from DEPARTMENTS );
+begin
+
+for dept in dept_cursor loop 
+
+insert into DEPARTMENTS values (dept.DEPARTMENT_ID+10  ,dept.DEPARTMENT_NAME ,dept.MANAGER_ID , dept.LOCATION_ID );
+
+dbms_output.put_line(dept.DEPARTMENT_ID+10  ||' '||dept.DEPARTMENT_NAME ||' '|| dept.MANAGER_ID ||' '|| dept.LOCATION_ID);
+end loop;
+END ;
+/
+
+//quest 4
+
+declare 
+v_service DEPARTMENTS.DEPARTMENT_ID%type;
+begin
+
+select max(DEPARTMENT_ID) into v_service  from DEPARTMENTS ;
+dbms_output.put_line(v_service) ;
+END ;
+/
+
+//quest 5
+
+declare 
+CURSOR dept_cursor IS SELECT	DEPARTMENT_ID , DEPARTMENT_NAME , MANAGER_ID , LOCATION_ID  from DEPARTMENTS
+where DEPARTMENT_ID = (select max(DEPARTMENT_ID) from DEPARTMENTS );
+begin
+
+for dept in dept_cursor loop 
+
+
+dbms_output.put_line(dept.DEPARTMENT_ID  ||' '||dept.DEPARTMENT_NAME ||' '|| dept.MANAGER_ID ||' '|| dept.LOCATION_ID);
+end loop;
+END ;
+/
+
+//quest 6
+
+declare 
+CURSOR dept_cursor IS SELECT	DEPARTMENT_ID  from DEPARTMENTS
+where DEPARTMENT_ID = (select max(DEPARTMENT_ID) from DEPARTMENTS );
+begin
+for dept in dept_cursor loop 
+update  DEPARTMENTS set location_id=2500 
+where 	DEPARTMENT_ID = dept.DEPARTMENT_ID ;
+end loop;
+dbms_output.put_line(SQL%ROWCOUNT);
+END ;
+/
+
+//quest 7
+declare 
+v_emp_last employees.last_name%TYPE := '&s' ;
+v_mng_last employees.last_name%TYPE ;
+begin 
+select m.LAST_NAME into v_mng_last from employees e , employees m 
+where m.employee_id = e.manager_id and  e.last_name=v_emp_last ;
+
+dbms_output.put_line(v_mng_last);
+
+END ;
+/
+//quest 8
+declare 
+cursor emp_10 is select last_name , hire_date  from (select last_name , hire_date from employees order by hire_date desc) where rownum<11 ;
+begin 
+for emp in  emp_10 loop 
+
+dbms_output.put_line(emp.last_name);
+end loop ;
+END ;
+/
+//quest 9
+declare 
+cursor emp_10 is select count(*) as conter from employees where DEPARTMENT_ID=30  ;
+begin 
+for emp in  emp_10 loop 
+
+dbms_output.put_line(emp.conter);
+end loop ;
+END ;
+/
+//quest 10
+declare 
+v_salary employees.salary%TYPE ;
+
+v_name employees.last_name%TYPE ;
+begin 
+v_salary:= 3500;
+v_name:= 'chirok ';
+if v_salary < 3000 then 
+v_salary:=v_salary+500 ;
+dbms_output.put_line(v_name||'s salary updated');
+else  
+dbms_output.put_line(v_name||' earns '||v_salary);
+END IF ;
+END ;
+/
+//quest 11
+1- 
+a-
+select s.NomS  , s.Horaire from salle s, film f where f.titre = s.titre and 
+f.titre="les miserables";
+
+b-
+select acteur from film where acteur =All(select acteur from film);
+ c-
+ select spectateur from vu where spectateur = all (select amateur from aime);
